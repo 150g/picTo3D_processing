@@ -1,38 +1,31 @@
 class Box { //<>//
-  color[][] colorKey;
-  int w, h;
-  int offset;
-  Box() {
-    w = 0;
-    h = 0;
-    offset = 1;
-  }
-
-  void getBox( PImage image ) {
-    w = image.width;
-    h = image.height;
-    colorKey = new color[w/offset][h/offset];
-    for ( int x=0; x<w/offset; x++ ) {
-      for ( int y=0; y<h/offset; y++ ) {
-        colorKey[x][y] = image.pixels[offset*y*w + offset*x];
+  PShape p;
+  PImage i;
+  int w, h, offset;
+  Box( PImage image ) {
+    i = image;
+    w = i.width;
+    h = i.height;
+    offset = 10;
+    
+    p = createShape();
+    p.beginShape();
+    p.texture( i );
+    for ( int x=1; x<w/offset; x++ ) {
+      for ( int y=1; y<h/offset; y++ ) {
+        p.vertex( (x-1)*offset, (y-1)*offset, getZ( x-1, y-1)); //3
+        p.vertex( x*offset, (y-1)*offset, getZ( x, y-1 )); //3
+        p.vertex( x*offset, y*offset, getZ( x, y )); //3
       }
     }
+    p.endShape( CLOSE );
+  }
+
+  float getZ( int x, int y ) {
+    return -brightness( i.pixels[ offset * ( x + y * w )]);
   }
 
   void setBox() {
-    if (colorKey != null ) {
-      for ( int x=0; x<colorKey.length; x++ ) {
-        for ( int y=0; y<colorKey[x].length; y++ ) {
-          if ( alpha( colorKey[x][y] ) != 0 ) {
-            pushMatrix();
-            translate( x*offset, -height/2+y*offset );
-            fill( colorKey[x][y] );
-            noStroke();
-            box( offset, offset, brightness( colorKey[x][y] )*1.5 );
-            popMatrix();
-          }
-        }
-      }
-    }
+    shape( p, -width/2, -height/2 );
   }
 }

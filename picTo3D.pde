@@ -1,4 +1,4 @@
-/* //<>//
+/* //<>// //<>// //<>// //<>//
  김동호
  왼쪽 위에 잘 찾아보면 스타트 버튼 있습니다.
  */
@@ -6,28 +6,26 @@ Button start;
 Image image;
 Box box;
 float distance;
-PImage img;
+boolean isImageReady;
 
 void setup() {
-  colorMode( HSB, 100 );
+  colorMode( HSB, 50 );
   size( 640, 480, P3D );
-
+  image = null;
   start = new Button( 30, 30 );
-  image = new Image();
-  box = new Box();
-  img = null;
+  isImageReady = false;
 }
 
 void draw() {
-  background( 0, 0, 95 );
- //<>//
+  background( 0, 0, 9.5 );
+
   distance = dist( mouseX, mouseY, start.getX(), start.getY() );
   mouseOver();
 
-  if ( img != null ) {
+  if ( isImageReady ) {
     pushMatrix();
-    translate( 0, height/2, -100 );
-    rotateX( 0.5 * sin( radians( frameCount % 360 ) ) );
+    translate( width/2, height/2 );
+    rotateX( sin( radians( frameCount * 3 ) ) );
     //image.setImage();
     box.setBox();
     popMatrix();
@@ -44,9 +42,10 @@ void mousePressed() {
 void isSelected( File selection ) {
   if ( selection != null ) {
     String url = selection.getPath();
-    img = image.initImage( url );
-    box.getBox( img ); //<>//
-    surface.setSize( img.width+50, img.height+50 );
+    image = new Image( url );
+    box = new Box( image.getImage() );
+    isImageReady = true;
+    surface.setSize( image.getImage().width+50, image.getImage().height+50 );
   }
 }
 

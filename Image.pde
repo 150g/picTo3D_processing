@@ -1,8 +1,12 @@
 class Image {
   private PImage i;
 
-  PImage initImage(String url) {
+  Image( String url ) {
     i = loadImage( url );
+    //i.resize( i.width/2, i.height/2 );
+  }
+  
+  PImage getImage() {
     return i;
   }
   
